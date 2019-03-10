@@ -1,5 +1,8 @@
 package github.nisrulz.projectqreader;
 
+import android.app.DownloadManager;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.Point;
 import android.os.Bundle;
@@ -14,6 +17,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.zxing.WriterException;
 
@@ -21,16 +25,24 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.BufferedOutputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.Console;
 import java.io.IOException;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 
 import androidmads.library.qrgenearator.QRGContents;
 import androidmads.library.qrgenearator.QRGEncoder;
+import androidmads.library.qrgenearator.QRGSaver;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 
+import static android.provider.ContactsContract.CommonDataKinds.Website.URL;
 
 public class qrGeneration extends AppCompatActivity {
 
@@ -97,11 +109,11 @@ public class qrGeneration extends AppCompatActivity {
                 final JSONObject obj = new JSONObject();
                 try {
                     obj.put("sellAmount", sellAmount);
+                    obj.put("sellToken", sellToken);
                     obj.put("buyAmount", buyAmount);
-                    obj.put("publicKey", publicKey);
+                    obj.put("buyToken", buyToken);
                     obj.put("privateKey", privateKey);
-                    obj.put("buyTokenType", buyToken);
-                    obj.put("sellTokenType", sellToken);
+                    obj.put("publicKey", publicKey);
                 } catch (JSONException e) {
                     // TODO Auto-generated catch block
                     e.printStackTrace();
@@ -132,13 +144,28 @@ public class qrGeneration extends AppCompatActivity {
                 }
 
                 //Post to the blockchain
-                String response = "";
                 try{
-                     response = post("http://localhost:3000/add-order", obj.toString());}
+                    Thread thread = new Thread(new Runnable(){
+                        @Override
+                        public void run(){
+                            String response = "";
+
+                            try {
+                                response = post("http://localhost:3000/add-order", obj.toString());
+                                Log.d("Test","POSTED TO BLOCKCHAIN");
+                                Log.d("Test", response);
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+
+                        }
+                    });
+                    thread.start();
+                   }
                 catch (Exception e){
                     System.out.println(e.getStackTrace().toString());
                 }
-                System.out.println(response);
+
 
             }
         });
@@ -165,6 +192,12 @@ public class qrGeneration extends AppCompatActivity {
     public static final MediaType JSON = MediaType.get("application/json; charset=utf-8");
 
     String post(String url, String json) throws IOException {
+//        java.net.URL url2 = new URL(url);
+//        HttpURLConnection client = (HttpURLConnection) url2.openConnection();
+//        client.setRequestMethod("POST");
+
+
+
         RequestBody body = RequestBody.create(JSON, json);
         Request request = new Request.Builder()
                 .url(url)
