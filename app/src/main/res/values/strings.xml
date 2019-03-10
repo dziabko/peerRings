@@ -15,7 +15,7 @@
   -->
 
 <resources>
-  <string name="app_name">QREader</string>
+  <string name="app_name">Peerring</string>
   <string name="intro_text">Point the camera view to a QR Code to execute the transaction</string>
   <string name="restart_activity">Restart Activity</string>
   <string name="exec_qr_order">Execute Order</string>

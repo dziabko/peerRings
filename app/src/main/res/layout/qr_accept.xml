@@ -5,6 +5,7 @@
     android:layout_height="wrap_content"
     android:gravity="center_horizontal"
     android:orientation="vertical"
+    android:background="@color/colorPrimaryDark"
     android:padding="@dimen/activity_vertical_margin"
     tools:context=".qrAccept">
 
@@ -18,6 +19,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="This is the transaction encoded in the QR code."
+        android:textColor="@color/unixGreen"
         android:gravity="center"
         android:layout_margin="20dp"/>
 
@@ -28,6 +30,7 @@
             android:id="@+id/buyOrder2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:textColor="@color/unixGreen"
             android:gravity="center"
             android:text="0 ETH"/>
     </RelativeLayout>
@@ -40,6 +43,7 @@
             android:id="@+id/sellOrder2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:textColor="@color/unixGreen"
             android:gravity="center"
             android:text="0 BTC"/>
     </RelativeLayout>
@@ -61,6 +65,8 @@
             android:id="@+id/accept"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginRight="10dp"
+            android:background="@drawable/button_bg"
             android:text="Accept" />
 
         <Button
@@ -68,6 +74,8 @@
             android:id="@+id/decline"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:background="@drawable/button_bg"
             android:text="Decline" />
     </LinearLayout>
 

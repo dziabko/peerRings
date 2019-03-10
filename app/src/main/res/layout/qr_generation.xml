@@ -1,8 +1,9 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
     android:gravity="center_horizontal"
+    android:background="@color/colorPrimaryDark"
     android:orientation="vertical"
     android:padding="@dimen/activity_vertical_margin"
     tools:context=".MainActivity">
@@ -18,6 +19,7 @@
         android:id="@+id/currentTokenAmount1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textColor="@color/unixGreen"
         android:layout_gravity="left"
         android:text="0 ETH"/>
 
@@ -28,8 +30,11 @@
         <EditText
             android:id="@+id/sell_value"
             android:layout_width="match_parent"
-            android:layout_height="25dp"
+            android:layout_height="35dp"
             android:paddingLeft="10dp"
+            android:textColorHint="@color/unixGreen"
+            android:textColor="@color/unixGreen"
+            android:inputType="number|none"
             android:layout_alignParentLeft="true"
             android:layout_toStartOf="@+id/sellToken"
             android:layout_toLeftOf="@+id/sellToken"
@@ -39,7 +44,7 @@
         <Spinner
             android:id="@+id/sellToken"
             android:layout_width="wrap_content"
-            android:layout_height="25dp"
+            android:layout_height="35dp"
             android:layout_alignParentRight="true"
             android:entries="@array/coin_array"
             android:background="@drawable/dropdownstyle"/>
@@ -52,6 +57,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="left"
+        android:textColor="@color/unixGreen"
         android:text="0 ETH"/>
 
     <RelativeLayout
@@ -61,18 +67,21 @@
         <EditText
             android:id="@+id/buy_value"
             android:layout_width="match_parent"
-            android:layout_height="25dp"
+            android:layout_height="35dp"
             android:paddingLeft="10dp"
+            android:textColorHint="@color/unixGreen"
+            android:textColor="@color/unixGreen"
             android:layout_alignParentLeft="true"
             android:layout_toStartOf="@+id/buyToken"
             android:layout_toLeftOf="@+id/buyToken"
+            android:inputType="number|none"
             android:hint="Amount to Buy"
             android:background="@drawable/edittextstyle"/>
 
         <Spinner
             android:id="@+id/buyToken"
             android:layout_width="wrap_content"
-            android:layout_height="25dp"
+            android:layout_height="35dp"
             android:layout_alignParentRight="true"
             android:entries="@array/coin_array"
             android:background="@drawable/dropdownstyle"/>
@@ -80,16 +89,17 @@
 
     </RelativeLayout>
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+    <!--<RelativeLayout-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent">-->
 
-    </RelativeLayout>
+    <!--</RelativeLayout>-->
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
+        android:layout_marginTop="20dp"
         android:orientation="horizontal">
 
         <Button
@@ -97,6 +107,8 @@
             android:id="@+id/generate"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginRight="20dp"
+            android:background="@drawable/button_bg"
             android:text="Generate" />
 
         <Button
@@ -104,13 +116,17 @@
             android:id="@+id/save"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:background="@drawable/button_bg"
             android:text="Save" />
+
     </LinearLayout>
 
     <ImageView
         android:id="@+id/QR_Image"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
         android:contentDescription="@string/app_name" />
 
 </LinearLayout>
