@@ -19,4 +19,14 @@
   <string name="intro_text">Point the camera view to a QR Code to read the information</string>
   <string name="restart_activity">Restart Activity</string>
   <string name="stop_start_qreader">Stop QREader</string>
+
+  <string-array name="coin_array">
+    <item>ETH</item>
+    <item>BTC</item>
+    <item>EOS</item>
+    <item>LTC</item>
+  </string-array>
+
+  <string name="public_key">pb</string>
+  <string name="private_key">pv</string>
 </resources>
