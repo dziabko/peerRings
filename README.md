@@ -4,3 +4,5 @@ Using Looprings protocol for interacting with their smart contracts, we allow us
 
 This is the front end Android application which communicated with our backend talking with the Ethereum networks. Here we provide a useful tool to help facilitate peer to peer transactions using QR codes to send money to each other. This uses decentralized wallets, and helps users set up transactions.
 
+We used Looprings protocol2 to help facilitate the transfer of cryptocurrency/tokens.
+
