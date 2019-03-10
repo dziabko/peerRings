@@ -16,15 +16,13 @@
 
 <resources>
   <string name="app_name">QREader</string>
-  <string name="intro_text">Point the camera view to a QR Code to read the information</string>
+  <string name="intro_text">Point the camera view to a QR Code to execute the transaction</string>
   <string name="restart_activity">Restart Activity</string>
-  <string name="stop_start_qreader">Stop QREader</string>
+  <string name="exec_qr_order">Execute Order</string>
 
   <string-array name="coin_array">
-    <item>ETH</item>
-    <item>BTC</item>
-    <item>EOS</item>
-    <item>LTC</item>
+    <item>WETH</item>
+    <item>LRC</item>
   </string-array>
 
   <string name="public_key">pb</string>

@@ -24,6 +24,7 @@ import com.google.zxing.WriterException;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.json.simple.parser.JSONParser;
 
 import java.io.BufferedOutputStream;
 import java.io.ByteArrayOutputStream;
@@ -60,6 +61,10 @@ public class qrGeneration extends AppCompatActivity {
     String sellToken;
     String buyToken;
 
+    //Sell/Buy Spinners
+    Spinner mySpinner1;
+    Spinner mySpinner2;
+
     //Private Key
     String publicKey;
     String privateKey;
@@ -94,81 +99,117 @@ public class qrGeneration extends AppCompatActivity {
 
 
 
-        generate.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //Buy/Sell amounts/tokens
-                sellAmount = Double.valueOf(((EditText) (findViewById(R.id.sell_value))).getText().toString());
-                buyAmount = Double.valueOf(((EditText) (findViewById(R.id.buy_value))).getText().toString());
 
-                Spinner mySpinner1 = (Spinner) findViewById(R.id.buyToken);
-                Spinner mySpinner2 = (Spinner) findViewById(R.id.sellToken);
-                buyToken = mySpinner1.getSelectedItem().toString();
-                sellToken = mySpinner2.getSelectedItem().toString();
+            generate.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
 
-                final JSONObject obj = new JSONObject();
-                try {
-                    obj.put("sellAmount", sellAmount);
-                    obj.put("sellToken", sellToken);
-                    obj.put("buyAmount", buyAmount);
-                    obj.put("buyToken", buyToken);
-                    obj.put("privateKey", privateKey);
-                    obj.put("publicKey", publicKey);
-                } catch (JSONException e) {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
-                }
 
-                Log.d("JSON", obj.toString());
-                inputValue = privateKey;
-                if (inputValue.length() > 0) {
-                    WindowManager manager = (WindowManager) getSystemService(WINDOW_SERVICE);
-                    Display display = manager.getDefaultDisplay();
-                    Point point = new Point();
-                    display.getSize(point);
-                    int width = point.x;
-                    int height = point.y;
-                    int smallerDimension = width < height ? width : height;
-                    smallerDimension = smallerDimension * 3 / 4;
+                    //Buy/Sell amounts/tokens
+                    sellAmount = Double.valueOf(((EditText) (findViewById(R.id.sell_value))).getText().toString());
+                    buyAmount = Double.valueOf(((EditText) (findViewById(R.id.buy_value))).getText().toString());
 
-                    qrgEncoder = new QRGEncoder(
-                            inputValue, null,
-                            QRGContents.Type.TEXT,
-                            smallerDimension);
+                    mySpinner1 = (Spinner) findViewById(R.id.buyToken);
+                    mySpinner2 = (Spinner) findViewById(R.id.sellToken);
+                    buyToken = mySpinner1.getSelectedItem().toString();
+                    sellToken = mySpinner2.getSelectedItem().toString();
+
+                    final JSONObject obj = new JSONObject();
                     try {
-                        bitmap = qrgEncoder.encodeAsBitmap();
-                        qrImage.setImageBitmap(bitmap);
-                    } catch (WriterException e) {
-                        Log.v(TAG, e.toString());
+                        obj.put("sellAmount", sellAmount);
+                        obj.put("sellToken", sellToken);
+                        obj.put("buyAmount", buyAmount);
+                        obj.put("buyToken", buyToken);
+                        obj.put("privateKey", privateKey);
+                        obj.put("publicKey", publicKey);
+                    } catch (JSONException e) {
+                        // TODO Auto-generated catch block
+                        e.printStackTrace();
                     }
-                }
 
-                //Post to the blockchain
-                try{
-                    Thread thread = new Thread(new Runnable(){
-                        @Override
-                        public void run(){
-                            String response = "";
+                    Log.d("JSON", obj.toString());
+                    inputValue = obj.toString();
+                    if (inputValue.length() > 0) {
+                        WindowManager manager = (WindowManager) getSystemService(WINDOW_SERVICE);
+                        Display display = manager.getDefaultDisplay();
+                        Point point = new Point();
+                        display.getSize(point);
+                        int width = point.x;
+                        int height = point.y;
+                        int smallerDimension = width < height ? width : height;
+                        smallerDimension = smallerDimension * 3 / 4;
 
-                            try {
-                                response = post("http://localhost:3000/add-order", obj.toString());
-                                Log.d("Test","POSTED TO BLOCKCHAIN");
-                                Log.d("Test", response);
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                            }
-
+                        qrgEncoder = new QRGEncoder(
+                                inputValue, null,
+                                QRGContents.Type.TEXT,
+                                smallerDimension);
+                        try {
+                            bitmap = qrgEncoder.encodeAsBitmap();
+                            qrImage.setImageBitmap(bitmap);
+                        } catch (WriterException e) {
+                            Log.v(TAG, e.toString());
                         }
-                    });
-                    thread.start();
-                   }
-                catch (Exception e){
-                    System.out.println(e.getStackTrace().toString());
+                    }
+
+                    //Post to the blockchain
+                    try {
+                        Thread thread = new Thread(new Runnable() {
+                            @Override
+                            public void run() {
+                                String response = "";
+
+                                try {
+                                    response = post("http://localhost:3000/add-order", obj.toString());
+                                    Log.d("Test", "POSTED TO BLOCKCHAIN");
+                                    Log.d("Test", response);
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                }
+
+                            }
+                        });
+                        thread.start();
+                    } catch (Exception e) {
+                        System.out.println(e.getStackTrace().toString());
+                    }
+
+
                 }
+            });
+//        } else {
+//
+//            //If came in from scanning a QR code, display data
+//            EditText editBuy = (EditText) findViewById(R.id.buy_value);
+//            EditText editSell = (EditText) findViewById(R.id.sell_value);
+//
+//            //Get the data sent from prev screen
+//            String data = bundle.get("data").toString();
+//            JSONParser parser = new JSONParser();
+//            JSONObject json = null;
+//            try {
+//                json = (JSONObject) parser.parse(data);
+//
+//                editBuy.setText(json.get("buyAmount").toString() + " " +  json.get("buyToken"));
+//                editBuy.setEnabled(false);
+//
+//                editSell.setText(json.get("sellAmount").toString() + " " +  json.get("sellToken"));
+//                editSell.setEnabled(false);
+//
+//
+//                //Set the spinners invisible
+//                mySpinner1 = (Spinner) findViewById(R.id.buyToken);
+//                mySpinner1.setVisibility(View.INVISIBLE);
+//                mySpinner2 = (Spinner) findViewById(R.id.sellToken);
+//                mySpinner2.setVisibility(View.INVISIBLE);
+//
+//
+//            }catch (Exception e){
+//                System.out.println(e.toString());
+//            }
+//
+//
+////            editBuy.setText();
 
-
-            }
-        });
 
 //        save.setOnClickListener(new View.OnClickListener() {
 //            @Override
@@ -184,7 +225,7 @@ public class qrGeneration extends AppCompatActivity {
 //                }
 //            }
 //        });
-
+//        }
     }
 
     OkHttpClient client = new OkHttpClient();

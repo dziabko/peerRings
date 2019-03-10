@@ -11,6 +11,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import org.json.JSONArray;
+
 import github.nisrulz.qreader.QRDataListener;
 import github.nisrulz.qreader.QREader;
 
@@ -25,6 +27,13 @@ public class qrScan extends AppCompatActivity {
     private SurfaceView mySurfaceView;
     private QREader qrEader;
 
+    Bundle bundle;// = getIntent().getExtras();
+    String privateKey; // = bundle.getString("privateKey");
+    String publicKey; // = bundle.getString("publicKey");
+
+    //Exec Order button
+    Button execOrderBtn;
+
     boolean hasCameraPermission = false;
 
     @Override
@@ -33,24 +42,48 @@ public class qrScan extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         hasCameraPermission = RuntimePermissionUtil.checkPermissonGranted(this, cameraPerm);
 
+
+        //Get the public & private key from the prev screen
+        bundle = getIntent().getExtras();
+        privateKey = bundle.getString("privateKey");
+        publicKey = bundle.getString("publicKey");
+
         text = findViewById(R.id.code_info);
 
-        final Button stateBtn = findViewById(R.id.btn_start_stop);
-        // change of reader state in dynamic
-        stateBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (qrEader.isCameraRunning()) {
-                    stateBtn.setText("Start QREader");
-                    qrEader.stop();
-                } else {
-                    stateBtn.setText("Stop QREader");
-                    qrEader.start();
-                }
-            }
-        });
+//        final Button stateBtn = findViewById(R.id.btn_start_stop);
 
-        stateBtn.setVisibility(View.VISIBLE);
+        //Make exec order button hidden
+        execOrderBtn = (Button) findViewById(R.id.btn_exec_order);
+        execOrderBtn.setEnabled(false);
+
+        execOrderBtn.setOnClickListener(new View.OnClickListener() {
+                                            @Override
+                                            public void onClick(View view) {
+                                                Intent intentMain = new Intent(qrScan.this ,
+                                                        qrGeneration.class);
+                                                intentMain.putExtra("privateKey", privateKey);
+                                                intentMain.putExtra("publicKey", publicKey);
+                                                qrScan.this.startActivity(intentMain);
+                                            }
+                                        }
+        );
+        // change of reader state in dynamic
+//        stateBtn.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                if (qrEader.isCameraRunning()) {
+//                    stateBtn.setText("Start QREader");
+//                    qrEader.stop();
+//                } else {
+//                    stateBtn.setText("Stop QREader");
+//                    qrEader.start();
+//                }
+//            }
+//        });
+//
+//        stateBtn.setVisibility(View.VISIBLE);
+
+
 
         Button restartbtn = findViewById(R.id.btn_restart_activity);
         restartbtn.setOnClickListener(new View.OnClickListener() {
@@ -77,10 +110,6 @@ public class qrScan extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 //        restartActivity();
-
-                Bundle bundle = getIntent().getExtras();
-                String privateKey = bundle.getString("privateKey");
-                String publicKey = bundle.getString("publicKey");
                 Intent intentMain = new Intent(qrScan.this ,
                         qrGeneration.class);
                 intentMain.putExtra("privateKey", privateKey);
@@ -108,6 +137,16 @@ public class qrScan extends AppCompatActivity {
                     @Override
                     public void run() {
                         text.setText(data);
+//                        execOrderBtn.setEnabled(true);
+
+                        //Go to confirm order
+                        Intent intentMain = new Intent(qrScan.this ,
+                                qrAccept.class);
+                        intentMain.putExtra("privateKey", privateKey);
+                        intentMain.putExtra("publicKey", publicKey);
+//                        Log.d("Test", data);
+                        intentMain.putExtra("data", data);
+                        qrScan.this.startActivity(intentMain);
                     }
                 });
             }

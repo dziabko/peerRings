@@ -47,10 +47,10 @@
         android:textSize="20sp"
         />
     <Button
-        android:id="@+id/btn_start_stop"
+        android:id="@+id/btn_exec_order"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/stop_start_qreader"
+        android:text="@string/exec_qr_order"
         />
 
 
